@@ -16,6 +16,7 @@ model product {
   description String
   price       Int
   image       String
+  sold        Int    @default(0)
 
   @@index([name])
 }

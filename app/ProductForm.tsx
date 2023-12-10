@@ -9,6 +9,7 @@ export default function ProductForm() {
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
     data['image'] = imageUrl;
+
     // console.log(data);
     const res = await fetch('/api/product/', {
       method: 'POST',
