@@ -81,19 +81,21 @@ export default function ProductList({ products }: { products: product[] }) {
               style={{ backgroundImage: `url(${image})` }}
             />
             <div className='flex justify-between m-2'>
-              <p className=''>{name}</p>
+              <p className='text-white capitalize text-[1.3rem]'>{name}</p>
               <p className='text-green-500'>{price} ₩</p>
             </div>
-            <div className='mx-2 mb-2 text-slate-400 overflow-hidden block whitespace-pre'>{description}</div>
-            <div className='flex flex-row gap-2 m-1'>
-              <button className='bg-green-400 text-white px-4 rounded w-full' onClick={() => addToCart(id)}>
+            <div className='mx-2 mb-2 text-slate-400 overflow-hidden block whitespace-pre capitalize'>
+              {description}
+            </div>
+            <div className='flex flex-row items-center gap-2 m-1'>
+              <button className='bg-green-400 text-white px-4 py-2 rounded w-full' onClick={() => addToCart(id)}>
                 {!getCartCount(id) ? 'add to cart' : ' + '}
               </button>
               {Boolean(getCartCount(id)) && (
                 <div className='badge text-black bg-white badge-lg'>{getCartCount(id)}</div>
               )}{' '}
               <button
-                className='bg-red-400 text-white px-4 rounded w-full'
+                className='bg-red-400 text-white px-4 rounded py-2 w-full'
                 onClick={() => reduceFromCart(id)}
                 hidden={!getCartCount(id)}
               >

@@ -6,7 +6,7 @@ import { formatPrice } from '@/lib/utils';
 import ProductForm from '../components/ProductForm';
 
 async function getData() {
-  const data = await prisma.product.findMany({ orderBy: { sold: 'desc' }, take: 10 });
+  const data = await prisma.product.findMany({ orderBy: { sold: 'desc' }, take: 7 });
   return data;
 }
 export default async function Dashboard() {
@@ -33,7 +33,7 @@ export default async function Dashboard() {
   const pieChartData = data.map((p, id) => ({ value: p.price * p.sold, label: p.name, id }));
   return (
     <div className=''>
-      <div className='flex flex-row justify-around shadow-lg bg-black p-2'>
+      <div className='flex flex-row w-full justify-between shadow-lg bg-black p-2'>
         <h1>
           Total revenue: <span className='text-green-400'>{formatPrice(totalRevenue)}</span>
         </h1>
@@ -41,10 +41,12 @@ export default async function Dashboard() {
           <span className='text-green-400'>{totalItemsSold}</span> Items sold!
         </h1>
       </div>
-      <Chart columns={data.map((p) => p.name)} values={data.map((p) => p.sold)} title='Sales' />
-
-      {/* <Chart title='Revenue' columns={data.map((p) => p.name)} values={data.map((p) => p.price * p.sold)} /> */}
-      <Pie data={pieChartData} title='Revenue' />
+      <div className='flex justify-center items-center'>
+        <Chart columns={data.map((p) => p.name)} values={data.map((p) => p.sold)} title='Sales' />
+      </div>
+      <div className='flex justify-center items-center'>
+        <Pie data={pieChartData} title='Revenue' />
+      </div>
       <ProductForm />
     </div>
   );
