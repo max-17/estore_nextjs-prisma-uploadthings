@@ -1,5 +1,5 @@
 'use client';
-import { FormEvent, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import type { product } from '@prisma/client';
 import { productsWithCartCount } from '../api/product/route';
 
@@ -61,19 +61,23 @@ export default function ProductList({ products }: { products: product[] }) {
 
     if (res.ok) {
       form.reset();
+      setItems(productsWithCartCount);
+      modalRef.current?.close();
     }
   };
+
+  const modalRef = useRef<HTMLDialogElement>(null);
 
   return (
     <>
       <h1 className='mt-2' hidden={!calculateTotal()}>
         {`Total price: ${calculateTotal()} ₩`}
       </h1>
-      <div className='grid grid-cols-2 place-items-center max-w-fit justify-items-center mx-auto grid-flow-row gap-4 px-1 mt-2'>
+      <div className='grid grid-cols-2 place-items-center max-w-fit justify-items-center mx-auto grid-flow-row gap-4 px-1 my-2'>
         {products.map(({ name, id, price, description, image }) => (
-          <div className='rounded-md shadow-md w-full' key={id}>
+          <div className='rounded-md shadow-md shadow-slate-950 w-full' key={id}>
             <div
-              className='h-64 max-w-52 bg-cover bg-center bg-no-repeat rounded-t-md shadow-slate-300'
+              className='h-64 max-w-52 bg-cover bg-center bg-no-repeat rounded-t-md '
               style={{ backgroundImage: `url(${image})` }}
             />
             <div className='flex justify-between m-2'>
@@ -108,8 +112,8 @@ export default function ProductList({ products }: { products: product[] }) {
       {/* checkout */}
       {/* Open the modal using document.getElementById('ID').showModal() method */}
 
-      <dialog id='my_modal_5' className='modal pr-5 modal-bottom'>
-        <div className='modal-box bg-white max-w-full w-full h-full'>
+      <dialog id='my_modal_5' ref={modalRef} className='modal pr-5 modal-bottom'>
+        <div className='modal-box max-w-full w-full h-full'>
           <h3 className='font-bold text-lg'>Checkout</h3>
           <form onSubmit={handleCheckout}>
             <div className='mb-4'>
@@ -200,10 +204,15 @@ export default function ProductList({ products }: { products: product[] }) {
       <button
         className='fixed w-full bottom-0 bg-green-500 text-white py-1.5'
         hidden={!calculateTotal()}
-        onClick={() => document.getElementById('my_modal_5').showModal()}
+        onClick={() => {
+          modalRef.current?.showModal();
+          console.log('botton click');
+        }}
       >
         Buy Now
       </button>
+      <br />
+      <br />
     </>
   );
 }

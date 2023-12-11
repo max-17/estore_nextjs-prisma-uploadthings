@@ -9,6 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/cache": "11.11.0",
+    "@emotion/react": "11.11.1",
+    "@emotion/server": "11.11.0",
+    "@emotion/styled": "11.11.0",
+    "@mui/material": "5.14.2",
+    "@mui/system": "5.14.1",
+    "@mui/x-charts": "^6.18.3",
     "@prisma/client": "^5.7.0",
     "@uploadthing/react": "^6.0.2",
     "next": "14.0.4",

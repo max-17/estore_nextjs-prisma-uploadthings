@@ -34,15 +34,30 @@ export async function PUT(req: Request) {
 
   console.log(data);
   //this part not working
-  const updated = data.forEach(async (product: product) => {
-    const updatedProduct = await prisma.product.update({
-      where: { id: product.id },
-      data: {
-        sold: product.sold,
-      },
-    });
-    return updatedProduct;
-  });
+  const updateProducts = async (data: productsWithCartCount[]) => {
+    const updatedProducts = await Promise.all(
+      data.map(async (product) => {
+        try {
+          const updatedProduct = await prisma.product.update({
+            where: { id: product.id },
+            data: {
+              sold: product.sold,
+            },
+          });
+
+          return updatedProduct;
+        } catch (error) {
+          // Handle the error, e.g., log it or throw a custom error
+          console.error(`Error updating product ${product.id}:`, error);
+          throw error;
+        }
+      })
+    );
+
+    return updatedProducts;
+  };
+
+  const updated = updateProducts(data);
 
   console.log('updated---------------------', updated);
 

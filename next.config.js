@@ -16,6 +16,8 @@ const nextConfig = {
       },
     ],
   },
+  reactStrictMode: true,
+  transpilePackages: ['@mui/x-charts'],
 };
 
 module.exports = nextConfig;
