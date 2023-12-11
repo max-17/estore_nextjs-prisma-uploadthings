@@ -2,7 +2,11 @@
 import { UploadButton } from '@/utils/uploadthing';
 import { FormEvent, useRef, useState } from 'react';
 
-export default function ProductForm() {
+export default function ProductForm({
+  classes = 'indicator-item absolute badge right-10 badge-success btn btn-circle',
+}: {
+  classes?: string;
+}) {
   const [imageUrl, setImageUrl] = useState('');
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -28,10 +32,7 @@ export default function ProductForm() {
 
   return (
     <>
-      <button
-        className='indicator-item absolute badge right-10 badge-success btn btn-circle'
-        onClick={() => modalRef.current?.showModal()}
-      >
+      <button className={classes} onClick={() => modalRef.current?.showModal()}>
         <span className='text-4xl text-white align-middle m-auto'>+</span>
       </button>
 

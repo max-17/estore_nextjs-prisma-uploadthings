@@ -73,9 +73,9 @@ export default function ProductList({ products }: { products: product[] }) {
       <h1 className='mt-2' hidden={!calculateTotal()}>
         {`Total price: ${calculateTotal()} ₩`}
       </h1>
-      <div className='grid grid-cols-2 place-items-center max-w-fit justify-items-center mx-auto grid-flow-row gap-4 px-1 my-2'>
+      <div className='grid grid-cols-2 max-w-screen-sm  mx-auto grid-flow-row gap-4 px-1 my-2 '>
         {products.map(({ name, id, price, description, image }) => (
-          <div className='rounded-md shadow-md shadow-slate-950 w-full' key={id}>
+          <div className='rounded-md shadow-md shadow-slate-950 w-full max-w-2xl ' key={id}>
             <div
               className='h-64 max-w-52 bg-cover bg-center bg-no-repeat rounded-t-md '
               style={{ backgroundImage: `url(${image})` }}
@@ -89,6 +89,9 @@ export default function ProductList({ products }: { products: product[] }) {
               <button className='bg-green-400 text-white px-4 rounded w-full' onClick={() => addToCart(id)}>
                 {!getCartCount(id) ? 'add to cart' : ' + '}
               </button>
+              {Boolean(getCartCount(id)) && (
+                <div className='badge text-black bg-white badge-lg'>{getCartCount(id)}</div>
+              )}{' '}
               <button
                 className='bg-red-400 text-white px-4 rounded w-full'
                 onClick={() => reduceFromCart(id)}
@@ -96,14 +99,6 @@ export default function ProductList({ products }: { products: product[] }) {
               >
                 -
               </button>
-              {Boolean(getCartCount(id)) && (
-                <div
-                  className='inline-flex items-center justify-center max-w-full px-2 ms-2 text-xs font-semibold bg-blue-200 rounded-full'
-                  hidden={false}
-                >
-                  {getCartCount(id)}
-                </div>
-              )}
             </div>
           </div>
         ))}
@@ -112,7 +107,7 @@ export default function ProductList({ products }: { products: product[] }) {
       {/* checkout */}
       {/* Open the modal using document.getElementById('ID').showModal() method */}
 
-      <dialog id='my_modal_5' ref={modalRef} className='modal pr-5 modal-bottom'>
+      <dialog id='my_modal_5' ref={modalRef} className='modal modal-bottom'>
         <div className='modal-box max-w-full w-full h-full'>
           <h3 className='font-bold text-lg'>Checkout</h3>
           <form onSubmit={handleCheckout}>
@@ -202,7 +197,7 @@ export default function ProductList({ products }: { products: product[] }) {
       </dialog>
 
       <button
-        className='fixed w-full bottom-0 bg-green-500 text-white py-1.5'
+        className='fixed w-full bottom-0 bg-green-500 py-4 rounded-lg text-white'
         hidden={!calculateTotal()}
         onClick={() => {
           modalRef.current?.showModal();
@@ -211,6 +206,7 @@ export default function ProductList({ products }: { products: product[] }) {
       >
         Buy Now
       </button>
+
       <br />
       <br />
     </>
