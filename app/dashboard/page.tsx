@@ -1,8 +1,9 @@
+export const dynamic = 'force-dynamic';
+
 import { prisma } from '@/lib/prisma';
 import Chart, { Pie } from '../components/chart';
 import { formatPrice } from '@/lib/utils';
 import ProductForm from '../components/ProductForm';
-import { product } from '@prisma/client';
 
 async function getData() {
   const data = await prisma.product.findMany({ orderBy: { sold: 'desc' }, take: 10 });
