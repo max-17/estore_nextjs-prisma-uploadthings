@@ -18,7 +18,7 @@ export default async function Dashboard() {
       <div className='flex items-center justify-center h-screen'>
         <div className=''>
           <h1 className='text-2xl'>No Data</h1>
-          <ProductForm classes='relative btn btn-success rounded-full px-3' />
+          <ProductForm classes='relative btn btn-success rounded-full px-3 bottom-1/2' />
         </div>
       </div>
     );
@@ -32,8 +32,8 @@ export default async function Dashboard() {
   }, 0);
   const pieChartData = data.map((p, id) => ({ value: p.price * p.sold, label: p.name, id }));
   return (
-    <div className=''>
-      <div className='flex flex-row w-full justify-between shadow-lg bg-black p-2'>
+    <div className='relative'>
+      <div className='flex flex-row w-full justify-between - shadow-lg bg-black p-2 '>
         <h1>
           Total revenue: <span className='text-green-400'>{formatPrice(totalRevenue)}</span>
         </h1>
@@ -44,10 +44,10 @@ export default async function Dashboard() {
       <div className='flex justify-center items-center'>
         <Chart columns={data.map((p) => p.name)} values={data.map((p) => p.sold)} title='Sales' />
       </div>
-      <div className='flex justify-center items-center'>
+      <div className='flex justify-center items-center '>
         <Pie data={pieChartData} title='Revenue' />
       </div>
-      <ProductForm />
+      <ProductForm classes='fixed btn btn-success rounded-full px-3 bottom-14 right-12' />
     </div>
   );
 }
