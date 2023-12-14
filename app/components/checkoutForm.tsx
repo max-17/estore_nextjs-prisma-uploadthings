@@ -2,15 +2,15 @@ import React, { FormEvent, useRef } from 'react';
 
 import { productsWithCartCount } from '../api/product/route';
 
-function CheckoutForm({
-  items,
-  button,
-  onSuccess: sucessAction,
-}: {
+// CheckoutForm is a Modal that recieves button (to open Modal), items (cart items) and onSuccess callback func as props
+
+type Props = {
   items: productsWithCartCount[];
   button: React.ReactElement<{ onClick: () => void }>;
   onSuccess: () => void;
-}) {
+};
+
+function CheckoutForm({ items, button, onSuccess: sucessAction }: Props) {
   const modalRef = useRef<HTMLDialogElement>(null);
 
   const handleCheckout = async (e: FormEvent<HTMLFormElement>) => {

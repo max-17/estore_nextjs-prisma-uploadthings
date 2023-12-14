@@ -1,8 +1,9 @@
 'use client';
-import { FormEvent, useRef, useState } from 'react';
+import { useState } from 'react';
 import type { category, product } from '@prisma/client';
 import { formatPrice } from '@/lib/utils';
 import CheckoutForm from './checkoutForm';
+import { ProductCard } from './ProductCard';
 
 export default function ProductList({ products, categories }: { products: product[]; categories: category[] }) {
   const productsWithCartCount = products.map((item) => ({ ...item, cartCount: 0 }));
@@ -10,65 +11,16 @@ export default function ProductList({ products, categories }: { products: produc
   const [items, setItems] = useState(productsWithCartCount);
   const [filter, setFilter] = useState<number | null>(null);
 
-  // Function to add a product to the cart | cartCount + 1
-  const addToCart = (id: number) => {
-    setItems((items) => {
-      // console.log('state change +');
-      //find the item with id from array and increment cartCount
-
-      const updated = items.map((item) => (item.id === id ? { ...item, cartCount: item.cartCount + 1 } : item));
-      return updated;
-    });
-  };
-
-  const reduceFromCart = (id: number) => {
-    setItems((items) => {
-      console.log('state change -');
-
-      // Use map to create a new array with the reduced quantity for the specific item
-      const updatedItems = items.map((item) =>
-        item.id === id && item.cartCount > 0 ? { ...item, cartCount: item.cartCount - 1 } : item
-      );
-
-      return updatedItems;
-    });
-  };
-
   // Function to calculate the total price of items in the cart
   const calculateTotal = () => {
     return items.reduce((total, item) => total + item.price * item.cartCount, 0);
   };
 
-  const getCartCount = (id: number) => items.find((item) => item.id === id)?.cartCount;
-
-  const handleCheckout = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    const form = e.currentTarget;
-
-    const data = items.filter((item) => item.cartCount > 0);
-
-    data.forEach((product) => {
-      product.sold += product.cartCount;
-    });
-
-    // console.log(data);
-
-    const res = await fetch('/api/product/', {
-      method: 'PUT',
-      body: JSON.stringify(data),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    });
-
-    if (res.ok) {
-      form.reset();
-      setItems(productsWithCartCount);
-      modalRef.current?.close();
-    }
+  const updateState = (item: { cartCount: number; id: number }) => {
+    const { cartCount, id } = item;
+    const updated = items.map((item) => (item.id === id ? { ...item, cartCount } : item));
+    setItems(updated);
   };
-
-  const modalRef = useRef<HTMLDialogElement>(null);
 
   return (
     <>
@@ -80,13 +32,13 @@ export default function ProductList({ products, categories }: { products: produc
           <input
             className='join-item btn'
             key='all'
-            onChange={() => {
-              setFilter(null);
-            }}
             type='radio'
             name='options'
             aria-label='All'
             defaultChecked
+            onChange={() => {
+              setFilter(null);
+            }}
           />
           {categories.map(({ id, name }) => (
             <input
@@ -104,47 +56,21 @@ export default function ProductList({ products, categories }: { products: produc
       </div>
       <br />
       <div className='grid grid-cols-2 max-w-screen-sm  mx-auto grid-flow-row gap-4 px-1 my-2 '>
-        {products.map(({ name, id, price, description, image, categoryId }) => {
-          if (!filter || categoryId === filter)
+        {items.map((product) => {
+          const id = product.id;
+          // if no filter return all products, if filter check categoryId===filter
+          if (!filter || product.categoryId === filter)
             return (
-              <div
-                className='rounded-md border border-gray-900 border-opacity-50 shadow-md shadow-slate-950 w-full max-w-2xl '
+              <ProductCard
+                {...product}
                 key={id}
-              >
-                <div
-                  className='h-64 max-w-52 bg-cover bg-center bg-no-repeat rounded-t-md '
-                  style={{ backgroundImage: `url(${image})` }}
-                />
-                <div className='flex justify-between m-2'>
-                  <p className='text-white capitalize text-[1.3rem]'>{name}</p>
-                  <p className='text-green-500'>{price} ₩</p>
-                </div>
-                <div className='mx-2 mb-2 text-slate-400 overflow-hidden block whitespace-pre capitalize'>
-                  {description}
-                </div>
-                <div className='flex flex-row items-center gap-2 m-1'>
-                  <button className='bg-green-400 text-white px-4 py-2 rounded w-full' onClick={() => addToCart(id)}>
-                    {!getCartCount(id) ? 'add to cart' : ' + '}
-                  </button>
-                  {Boolean(getCartCount(id)) && (
-                    <div className='badge text-black bg-white badge-lg'>{getCartCount(id)}</div>
-                  )}{' '}
-                  <button
-                    className='bg-red-400 text-white px-4 rounded py-2 w-full'
-                    onClick={() => reduceFromCart(id)}
-                    hidden={!getCartCount(id)}
-                  >
-                    -
-                  </button>
-                </div>
-              </div>
+                // cart count of a single product
+                onChange={(cartCount) => updateState({ cartCount, id })}
+              />
             );
         })}
       </div>
-
-      {/* checkout */}
-      {/* Open the modal using document.getElementById('ID').showModal() method */}
-
+      {/*CheckoutForm is a Modal that recieves button (to open Modal), items (cart items) and onSuccess callback func as props */}
       <CheckoutForm
         items={items.filter((item) => item.cartCount > 0)}
         onSuccess={() => {
