@@ -73,33 +73,35 @@ export default function ProductList({ products, categories }: { products: produc
 
   return (
     <>
-      <h1 className='mb-3' hidden={!calculateTotal()}>
-        {`Total price: ${formatPrice(calculateTotal())}`}
-      </h1>
-      <div className='flex flex-rows overflow-auto w-[500px] gap-1'>
-        <input
-          className='join-item btn'
-          key='all'
-          onChange={() => {
-            setFilter(null);
-          }}
-          type='radio'
-          name='options'
-          aria-label='All'
-          defaultChecked
-        />
-        {categories.map(({ id, name }) => (
+      <div className='sticky top-0 bg-base-100 py-2 shadow-md shadow-[#0000005e]'>
+        <h1 className='mb-3' hidden={!calculateTotal()}>
+          {`Total price: ${formatPrice(calculateTotal())}`}
+        </h1>
+        <div className='flex flex-rows overflow-auto w-[500px] gap-1'>
           <input
             className='join-item btn'
-            key={id}
+            key='all'
             onChange={() => {
-              setFilter(id);
+              setFilter(null);
             }}
             type='radio'
             name='options'
-            aria-label={name}
+            aria-label='All'
+            defaultChecked
           />
-        ))}
+          {categories.map(({ id, name }) => (
+            <input
+              className='join-item btn'
+              key={id}
+              onChange={() => {
+                setFilter(id);
+              }}
+              type='radio'
+              name='options'
+              aria-label={name}
+            />
+          ))}
+        </div>
       </div>
       <br />
       <div className='grid grid-cols-2 max-w-screen-sm  mx-auto grid-flow-row gap-4 px-1 my-2 '>
