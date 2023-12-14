@@ -19,6 +19,8 @@
     "@prisma/client": "^5.7.0",
     "@uploadthing/react": "^6.0.2",
     "next": "14.0.4",
+    "next-auth": "^4.24.5",
+    "passport-telegram-official": "^2.0.1",
     "prisma": "^5.7.0",
     "react": "^18",
     "react-dom": "^18",
