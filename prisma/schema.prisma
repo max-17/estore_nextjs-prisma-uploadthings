@@ -10,6 +10,14 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// Define the Category model
+model category {
+  id       Int       @id @default(autoincrement())
+  name     String
+  // Define the relationship with products
+  products product[] @relation("CategoryToProducts")
+}
+
 model product {
   id          Int    @id @default(autoincrement())
   name        String
@@ -17,6 +25,10 @@ model product {
   price       Int
   image       String
   sold        Int    @default(0)
+  categoryId  Int?
+
+  // Define the relationship with the category
+  category category? @relation("CategoryToProducts", fields: [categoryId], references: [id])
 
   @@index([name])
 }

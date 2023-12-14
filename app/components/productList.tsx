@@ -1,17 +1,20 @@
 'use client';
 import { FormEvent, useRef, useState } from 'react';
-import type { product } from '@prisma/client';
-import { productsWithCartCount } from '../api/product/route';
+import type { category, product } from '@prisma/client';
+// import { productsWithCartCount } from '../api/product/route';
 
-export default function ProductList({ products }: { products: product[] }) {
+import { formatPrice } from '@/lib/utils';
+
+export default function ProductList({ products, categories }: { products: product[]; categories: category[] }) {
   const productsWithCartCount = products.map((item) => ({ ...item, cartCount: 0 }));
   //add cart count to every product| cartCount = 0
   const [items, setItems] = useState(productsWithCartCount);
+  const [filter, setFilter] = useState<number | null>(null);
 
   // Function to add a product to the cart | cartCount + 1
   const addToCart = (id: number) => {
     setItems((items) => {
-      console.log('state change +');
+      // console.log('state change +');
       //find the item with id from array and increment cartCount
 
       const updated = items.map((item) => (item.id === id ? { ...item, cartCount: item.cartCount + 1 } : item));
@@ -70,40 +73,72 @@ export default function ProductList({ products }: { products: product[] }) {
 
   return (
     <>
-      <h1 className='mt-2' hidden={!calculateTotal()}>
-        {`Total price: ${calculateTotal()} ₩`}
+      <h1 className='mb-3' hidden={!calculateTotal()}>
+        {`Total price: ${formatPrice(calculateTotal())}`}
       </h1>
-      <div className='grid grid-cols-2 max-w-screen-sm  mx-auto grid-flow-row gap-4 px-1 my-2 '>
-        {products.map(({ name, id, price, description, image }) => (
-          <div className='rounded-md shadow-md shadow-slate-950 w-full max-w-2xl ' key={id}>
-            <div
-              className='h-64 max-w-52 bg-cover bg-center bg-no-repeat rounded-t-md '
-              style={{ backgroundImage: `url(${image})` }}
-            />
-            <div className='flex justify-between m-2'>
-              <p className='text-white capitalize text-[1.3rem]'>{name}</p>
-              <p className='text-green-500'>{price} ₩</p>
-            </div>
-            <div className='mx-2 mb-2 text-slate-400 overflow-hidden block whitespace-pre capitalize'>
-              {description}
-            </div>
-            <div className='flex flex-row items-center gap-2 m-1'>
-              <button className='bg-green-400 text-white px-4 py-2 rounded w-full' onClick={() => addToCart(id)}>
-                {!getCartCount(id) ? 'add to cart' : ' + '}
-              </button>
-              {Boolean(getCartCount(id)) && (
-                <div className='badge text-black bg-white badge-lg'>{getCartCount(id)}</div>
-              )}{' '}
-              <button
-                className='bg-red-400 text-white px-4 rounded py-2 w-full'
-                onClick={() => reduceFromCart(id)}
-                hidden={!getCartCount(id)}
-              >
-                -
-              </button>
-            </div>
-          </div>
+      <div className='flex flex-rows overflow-auto w-[500px] gap-1'>
+        <input
+          className='join-item btn'
+          key='all'
+          onChange={() => {
+            setFilter(null);
+          }}
+          type='radio'
+          name='options'
+          aria-label='All'
+          defaultChecked
+        />
+        {categories.map(({ id, name }) => (
+          <input
+            className='join-item btn'
+            key={id}
+            onChange={() => {
+              setFilter(id);
+            }}
+            type='radio'
+            name='options'
+            aria-label={name}
+          />
         ))}
+      </div>
+      <br />
+      <div className='grid grid-cols-2 max-w-screen-sm  mx-auto grid-flow-row gap-4 px-1 my-2 '>
+        {products.map(({ name, id, price, description, image, categoryId }) => {
+          if (!filter || categoryId === filter)
+            return (
+              <div
+                className='rounded-md border border-gray-900 border-opacity-50 shadow-md shadow-slate-950 w-full max-w-2xl '
+                key={id}
+              >
+                <div
+                  className='h-64 max-w-52 bg-cover bg-center bg-no-repeat rounded-t-md '
+                  style={{ backgroundImage: `url(${image})` }}
+                />
+                <div className='flex justify-between m-2'>
+                  <p className='text-white capitalize text-[1.3rem]'>{name}</p>
+                  <p className='text-green-500'>{price} ₩</p>
+                </div>
+                <div className='mx-2 mb-2 text-slate-400 overflow-hidden block whitespace-pre capitalize'>
+                  {description}
+                </div>
+                <div className='flex flex-row items-center gap-2 m-1'>
+                  <button className='bg-green-400 text-white px-4 py-2 rounded w-full' onClick={() => addToCart(id)}>
+                    {!getCartCount(id) ? 'add to cart' : ' + '}
+                  </button>
+                  {Boolean(getCartCount(id)) && (
+                    <div className='badge text-black bg-white badge-lg'>{getCartCount(id)}</div>
+                  )}{' '}
+                  <button
+                    className='bg-red-400 text-white px-4 rounded py-2 w-full'
+                    onClick={() => reduceFromCart(id)}
+                    hidden={!getCartCount(id)}
+                  >
+                    -
+                  </button>
+                </div>
+              </div>
+            );
+        })}
       </div>
 
       {/* checkout */}
@@ -199,7 +234,7 @@ export default function ProductList({ products }: { products: product[] }) {
       </dialog>
 
       <button
-        className='fixed w-full bottom-0 bg-green-500 py-4 rounded-lg text-white'
+        className='fixed w-[500px] bottom-0 bg-green-500 py-4 rounded-lg text-white'
         hidden={!calculateTotal()}
         onClick={() => {
           modalRef.current?.showModal();
