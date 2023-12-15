@@ -12,9 +12,11 @@ export type productsWithCartCount = {
   sold: number;
 };
 
+// create a new product
 export async function POST(req: Request) {
   const data = await req.json();
   //price comes as string from client
+
   data.price = Number(data.price);
 
   console.log(data);

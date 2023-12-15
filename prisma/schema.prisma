@@ -19,16 +19,42 @@ model category {
 }
 
 model product {
-  id          Int    @id @default(autoincrement())
+  id          Int      @id @default(autoincrement())
   name        String
   description String
   price       Int
   image       String
-  sold        Int    @default(0)
+  sold        Int      @default(0)
   categoryId  Int?
+  updatedAt   DateTime @default(now()) @updatedAt
+  order       order[]
 
   // Define the relationship with the category
   category category? @relation("CategoryToProducts", fields: [categoryId], references: [id])
 
   @@index([name])
+}
+
+// user model
+model user {
+  id       Int     @id @default(autoincrement())
+  email    String  @unique
+  password String
+  role     String  @default("USER")
+  orders   order[]
+}
+
+// order model
+model order {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  createdAt DateTime @default(now())
+
+  // Define the relationship with the user
+  user user @relation(fields: [userId], references: [id])
+
+  // Define the relationship with the product
+  product product @relation(fields: [productId], references: [id])
+  amount  Int
 }
