@@ -44,7 +44,7 @@ export default function ProductList({
           <h1 className="mb-3" hidden={!calculateTotal()}>
             {`Total price: ${formatPrice(calculateTotal())}`}
           </h1>
-          <button className="bg-red-500 p-0 px-1 rounded-md" onClick={() => signOut()}>sign out</button>
+          <button className="bg-red-500 p-0 px-1 rounded-md ml-auto" onClick={() => signOut()}>sign out</button>
         </div>
         <div className="relative overflow-x-auto overflow-hidden h-14">
           <div className="absolute flex flex-rows gap-1">
