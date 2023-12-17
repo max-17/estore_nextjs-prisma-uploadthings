@@ -4,6 +4,7 @@ import type { category, product } from '@prisma/client';
 import { formatPrice } from '@/lib/utils';
 import CheckoutForm from './checkoutForm';
 import { ProductCard } from './ProductCard';
+import { signOut } from 'next-auth/react';
 
 export default function ProductList({ products, categories }: { products: product[]; categories: category[] }) {
   const productsWithCartCount = products.map((item) => ({ ...item, cartCount: 0 }));
@@ -24,6 +25,7 @@ export default function ProductList({ products, categories }: { products: produc
 
   return (
     <>
+    <button onClick={()=>signOut()}>sign out</button>
       <div className='sticky top-0 bg-base-100 py-2 shadow-md shadow-[#0000005e]'>
         <h1 className='mb-3' hidden={!calculateTotal()}>
           {`Total price: ${formatPrice(calculateTotal())}`}

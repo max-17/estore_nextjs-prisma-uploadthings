@@ -1,24 +1,30 @@
 export const dynamic = 'force-dynamic';
 
 import { prisma } from '@/lib/prisma';
-import Chart, { Pie } from '../components/chart';
+import Chart, { Pie } from '@/app/components/chart';
 import { formatPrice } from '@/lib/utils';
-import ProductForm from '../components/ProductForm';
+import ProductForm from '@/app/components/ProductForm';
 
 async function getData() {
   const data = await prisma.product.findMany({ orderBy: { sold: 'desc' }, take: 7 });
-  return data;
+  const categories = await prisma.category.findMany();
+  return {data, categories};
 }
 export default async function Dashboard() {
   // response comes as an array
-  const data = await getData();
+  const res = await getData();
+  const data = res.data;
+  const categories = res.categories;
+
 
   if (!data.length)
     return (
       <div className='flex items-center justify-center h-screen'>
         <div className=''>
           <h1 className='text-2xl'>No Data</h1>
-          <ProductForm classes='relative btn btn-success rounded-full px-3 bottom-1/2' />
+
+          <ProductForm classes='relative btn btn-success rounded-full px-3 bottom-1/2' categories={categories} />
+
         </div>
       </div>
     );
@@ -47,7 +53,7 @@ export default async function Dashboard() {
       <div className='flex justify-center items-center '>
         <Pie data={pieChartData} title='Revenue' />
       </div>
-      <ProductForm classes='fixed btn btn-success rounded-full px-3 bottom-14 right-12' />
+      <ProductForm classes='fixed btn btn-success rounded-full px-3 bottom-14 right-12' categories={categories}/>
     </div>
   );
 }
