@@ -46,8 +46,8 @@ export default function ProductList({
           </h1>
           <button className="bg-red-500 p-0 px-1 rounded-md" onClick={() => signOut()}>sign out</button>
         </div>
-        <div className="relative overflow-x-auto h-12">
-          <div className="absolute flex flex-rows overflow-auto gap-1">
+        <div className="relative overflow-x-auto overflow-hidden h-14">
+          <div className="absolute flex flex-rows gap-1">
             <input
               className="join-item btn"
               key="all"
