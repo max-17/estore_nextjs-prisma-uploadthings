@@ -38,7 +38,7 @@ function CheckoutForm({ items, button, onSuccess: sucessAction }: Props) {
   };
 
   return (
-    <div>
+    <div className='max-w-md'>
       <dialog id='my_modal_5' ref={modalRef} className='modal modal-bottom'>
         <div className='modal-box max-w-full w-full h-full'>
           <h3 className='font-bold text-lg'>Checkout</h3>

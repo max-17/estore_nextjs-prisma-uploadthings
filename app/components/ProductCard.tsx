@@ -18,9 +18,9 @@ export const ProductCard = ({
   onChange: (cartCount: number) => void;
 }) => {
   return (
-    <div className='rounded-md border border-gray-900 border-opacity-50 shadow-md shadow-slate-950 w-full max-w-2xl '>
+    <div className='rounded-md border border-gray-900 border-opacity-50 shadow-md shadow-slate-950 w-full'>
       <div
-        className='h-64 max-w-52 bg-cover bg-center bg-no-repeat rounded-t-md '
+        className='h-64 bg-cover bg-center bg-no-repeat rounded-t-md '
         style={{ backgroundImage: `url(${image})` }}
       />
       <div className='flex justify-between m-2'>
