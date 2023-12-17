@@ -1,23 +1,17 @@
 import { prisma } from '@/lib/prisma';
-import { product } from '@prisma/client';
+import { product, category } from '@prisma/client';
 import { NextResponse } from 'next/server';
 
-export type productsWithCartCount = {
+export type productWithCartCount = {
   cartCount?: number;
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  image: string;
-  sold: number;
-};
+}& product;
 
 // create a new product
 export async function POST(req: Request) {
   const data = await req.json();
-  //price comes as string from client
-
+  //price and categoryId come as string from client
   data.price = Number(data.price);
+  data.categoryId = Number(data.categoryId);
 
   console.log(data);
 
@@ -30,13 +24,13 @@ export async function POST(req: Request) {
 export async function PUT(req: Request) {
   const data = await req.json();
 
-  data.forEach((item: productsWithCartCount) => {
+  data.forEach((item: productWithCartCount) => {
     delete item.cartCount;
   });
 
   console.log(data);
   //this part not working
-  const updateProducts = async (data: productsWithCartCount[]) => {
+  const updateProducts = async (data: productWithCartCount[]) => {
     const updatedProducts = await Promise.all(
       data.map(async (product) => {
         try {

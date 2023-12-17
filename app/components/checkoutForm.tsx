@@ -1,11 +1,11 @@
 import React, { FormEvent, useRef } from 'react';
 
-import { productsWithCartCount } from '../api/product/route';
+import { productWithCartCount } from '../api/product/route';
 
 // CheckoutForm is a Modal that recieves button (to open Modal), items (cart items) and onSuccess callback func as props
 
 type Props = {
-  items: productsWithCartCount[];
+  items: productWithCartCount[];
   button: React.ReactElement<{ onClick: () => void }>;
   onSuccess: () => void;
 };

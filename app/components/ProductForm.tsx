@@ -17,6 +17,8 @@ export default function ProductForm({
     const form = e.currentTarget;
     const data = Object.fromEntries(new FormData(form).entries());
     data['image'] = imageUrl;
+    data['categoryId'] = data['categoryId'] || ''
+    
 
     // console.log(data);
     const res = await fetch('/api/product/', {
@@ -73,7 +75,7 @@ export default function ProductForm({
               </label>
               <select
                 id='category'
-                name='category'
+                name='categoryId'
                 className='w-full rounded-md border p-2'
                 placeholder='choose category'
               >
