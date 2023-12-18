@@ -98,7 +98,7 @@ export default function ProductList({
         }}
         button={
           <button
-            className="fixed w-full max-w-[475px] bottom-0 bg-green-500 py-4 rounded-lg text-white"
+            className="fixed w-full max-w-[475px] bottom-10 bg-green-500 py-4 rounded-lg text-white"
             hidden={!calculateTotal()}
           >
             Pay
