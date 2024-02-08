@@ -9,6 +9,7 @@ export const options: NextAuthOptions = {
   providers: [
     GitHubProvider({
       clientId: process.env.GITHUB_ID as string,
+      // CHANGE process.env.GOTHUB_SECRET TO  GITHUB_SECRET
       clientSecret: process.env.GOTHUB_SECRET as string,
     }),
     CredentialsProvider({
